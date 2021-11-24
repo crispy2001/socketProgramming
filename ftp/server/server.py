@@ -39,7 +39,6 @@ def upload(conn, filename):
 		received_size += len(data) 
 		m.update(data) # 不斷更新md5 
 		f.write(data) # 不斷寫入 
-		print(file_total_size, received_size) 
 
 	new_file_md5 = m.hexdigest() # 獲取十六進位制的md5 
 	print("file recv done") 

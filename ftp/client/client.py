@@ -23,7 +23,7 @@ def download(filename):					# 從遠端下載檔案
 		received_size += len(data) 
 		m.update(data) # 不斷更新md5 
 		f.write(data) # 不斷寫入 
-		print(file_total_size, received_size) 
+		#print(file_total_size, received_size) 
 
 	new_file_md5 = m.hexdigest() # 獲取十六進位制的md5 
 	print("download complete") 
@@ -52,7 +52,7 @@ def shCMD():
 	print(cmd)
 
 while True:
-	data = input("input command: ")		# 形式 get filename
+	data = input("input command: ")		
 	cmd = data.split()
 	if len(data) == 0: 
 		client.close()
