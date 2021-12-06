@@ -77,4 +77,4 @@ while True:
 		client.send(c.encode()) 
 		serverCMD()
 	else:
-		print("invalied input")
+		print("invalid input")

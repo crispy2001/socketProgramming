@@ -73,7 +73,22 @@ python3 server.py
 python3 client.py
 ```
 
+### function介紹
+server端
+- client_thread()
+    - 接受client輸入，然後去判斷符合哪個功能指令
+- download()
+- upload()
+- shCMD()
+    - 處理bash輸入
 
+client端
+- download()
+- upload()
+- clientCMD()
+    - 處理在本機端的bash指令輸入
+- serverCMD()
+    - 處理server端bash指令輸入
 
 
 
