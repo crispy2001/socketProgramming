@@ -8,7 +8,7 @@ server.listen(10)
 def download(conn, filename):
 	print(filename)
 	if os.path.isfile(filename):  # 判斷是否該檔名為檔案
-		f = open(filename,"rb")
+		f = open(filename ,"rb")
 		m = hashlib.md5() # 為md5準備
 		file_size = os.stat(filename).st_size # 利用os.stat獲取檔案的大小
 		conn.send( str(file_size).encode() ) # send file size
@@ -19,14 +19,16 @@ def download(conn, filename):
 		print("file md5",m.hexdigest()) # 十六進位制的md5
 		f.close()
 		conn.send(m.hexdigest().encode()) # send md5
-	print("send done")
+		print("send done")
+	else:
+		print("no such a file")
 
 def upload(conn, filename):
 	server_response = conn.recv(1024) # 接收檔案大小資訊
 	conn.send(b"ready to recv file") # 傳送確認資訊
 	file_total_size = int(server_response.decode()) #檔案大小
 	received_size = 0 # 初始化接收資料大小，為0
-	f = open(filename + ".new","wb") # 以二進位制形式寫入
+	f = open(filename + ".upload","wb") # 以二進位制形式寫入
 	m = hashlib.md5() # 為md5準備
 
 	while received_size != file_total_size:

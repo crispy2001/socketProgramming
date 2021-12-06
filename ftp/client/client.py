@@ -10,7 +10,7 @@ def download(filename):					# 從遠端下載檔案
 	client.send(b"ready to recv file") # 傳送確認資訊
 	file_total_size = int(server_response.decode()) # 檔案大小int化
 	received_size = 0 # 初始化接收資料大小，為0
-	f = open(filename,"wb") # 以二進位制形式寫入
+	f = open(filename + ".download", "wb") # 以二進位制形式寫入
 	m = hashlib.md5() # 為md5準備，來確保我下載和遠端的檔事是不是真的是一樣的，沒有在唬你
 
 	while received_size != file_total_size:
@@ -33,7 +33,6 @@ def download(filename):					# 從遠端下載檔案
 	print("client file md5:",new_file_md5) 
 
 def upload(filename):
-	print(filename)
 	if os.path.isfile(filename):  # 判斷是否該檔名為檔案
 		f = open(filename,"rb")
 		m = hashlib.md5() # 為md5準備
@@ -42,12 +41,17 @@ def upload(filename):
 		client.recv(1024) # 等待確認，同時可以防止粘包。
 		for line in f: # 一行一行傳送資料，同時更新md5
 			m.update(line)  # 不斷更新md5
-			conn.send(line) # 不斷送資料。
+			client.send(line) # 不斷送資料。
 		# print("file md5: ",m.hexdigest()) # 十六進位制的md5
 		f.close()
 		client.send(m.hexdigest().encode()) # send md5
 		print("upload complete")
-def shCMD():
+	else:
+		print("no such a file")
+def clientCMD(c):
+	os.system(c)
+
+def serverCMD():
 	cmd = client.recv(1024).decode()
 	print(cmd)
 
@@ -58,10 +62,19 @@ while True:
 		client.close()
 		print("client closed connection")
 		break
-	client.send(data.encode()) 
+	
 	if cmd[0] == "DOWNLOAD":
+		client.send(data.encode()) 
 		download(cmd[1])
 	elif cmd[0] == "UPLOAD":
+		client.send(data.encode()) 
 		upload(cmd[1])
+	elif cmd[0] == "CLIENT":
+		c = data[7:]
+		clientCMD(c)
+	elif cmd[0] == "SERVER":
+		c = data[7:]
+		client.send(c.encode()) 
+		serverCMD()
 	else:
-		shCMD()
+		print("invalied input")
